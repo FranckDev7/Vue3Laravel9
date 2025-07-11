@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     use HasFactory;
-    
+
     public function orders()
     {
         /**
@@ -21,5 +22,18 @@ class Product extends Model
          */
         return $this->belongsToMany(Order::class)
             ->withPivot('total_price', 'total_quantity');
+    }
+
+    protected function salePrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => str_replace('.', ',', $value / 100)
+        );
+    }
+    protected function regularPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => str_replace('.', ',', $value / 100)
+        );
     }
 }
