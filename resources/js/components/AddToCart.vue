@@ -13,6 +13,29 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+
     const productId = defineProps(['productId']);
-    const addToCart = () => console.log(productId);
+
+    /**
+     * axios.get('/sanctum/csrf-cookie') : requête qui initialise la protection contre les attaques CSRF
+     * dans une Single Page Application (SPA) utilisant Laravel Sanctum pour
+     * l'authentification via cookies c'est à dire Laravel renvoie le CSRF Token 'XSRF-TOKEN'
+     * au navigateur qu'il le stockera ensuite Axios (ou tout autre client HTTP configuré correctement)
+     * lit ce cookie et ajoute sa valeur dans un header HTTP spécial nommé X-XSRF-TOKEN pour chaque
+     * requête POST/PUT/DELETE.
+     *
+     * On fait ça car nous sommes dans un SPA, ou il n'y pas de possibilités d'utiliser (@csrf) comme
+     * dans un fichier blade pour faires des requêtes sécurisées
+     *
+     * await : mot-clé qui attend qu'une promesse (Promise) soit résolue avant de continuer l'exécution du code
+     */
+    const addToCart = async() => {
+        await axios.get('/sanctum/csrf-cookie');
+        await axios.get('/api/user')  // récupère les info de l'utilisateur actuellement connecté
+        .then(async(res) => {
+            console.log(res);
+        })
+        .catch(err => console.log(err));
+    }
 </script>
