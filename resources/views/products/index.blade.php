@@ -56,7 +56,7 @@
                                                 </div>
                                                 </div>
                                                 <!-- button -->
-                                                <add-to-cart></add-to-cart>
+                                                <add-to-cart :product-id="{{ $product->id }}"></add-to-cart>
                                             </div>
                                         </div>
 
